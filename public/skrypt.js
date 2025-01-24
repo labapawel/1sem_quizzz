@@ -34,7 +34,6 @@ const sock = io('wss://',{
 
 sock.on('connect', () => {
     console.log(`Jesteś połączony z hostem, moje id: ${sock.id}`);
-    
 });
 
 setInterval(() => {

@@ -29,19 +29,29 @@ ss.on('connection', (socket) =>
         let userid = socket.handshake.query.id || socket.headers['user-id'];
 
             console.log("Client connected");
-            baza.push({id:socket.id, userid:userid, name:"", lasttime: (new Date).getTime()});
+            let ud = UD(userid);
+            if(!ud)
+            {
+               baza.push({id:socket.id, userid:userid, name:"", lasttime: (new Date).getTime()});
+               ud = UD(userid);
+            }
+            if(ud.name != ""){
+                socket.emit('ud', ud);
+            }
 
             socket.on('dolacz', (name) => {
-                let ud = UD(userid);
+               // let ud = UD(userid);
+                console.log(ud);
+                
                 if(ud.name == ""){
                 console.log("Dolaczono " + name);
-                UD(userid).name = name;
+                ud.name = name;
                 }
             });
 
             socket.on('keepalive', () => {
                 console.log("Keepalive from " + userid);
-                UD(userid).lasttime = (new Date).getTime();
+                ud.lasttime = (new Date).getTime();
             });
 
 
