@@ -16,8 +16,37 @@ server.listen(443, () => {
 });
 
 let ss = io(server); // serwer socket.io
+
+let baza  = []; // baza danych
+
+const UD = (userid) =>{
+    return baza.filter((el) => el.userid == userid)[0];
+}
+
 ss.on('connection', (socket) => 
     { // połączenie z klientem
+
+        let userid = socket.handshake.query.id || socket.headers['user-id'];
+
             console.log("Client connected");
+            baza.push({id:socket.id, userid:userid, name:"", lasttime: (new Date).getTime()});
+
+            socket.on('dolacz', (name) => {
+                let ud = UD(userid);
+                if(ud.name == ""){
+                console.log("Dolaczono " + name);
+                UD(userid).name = name;
+                }
+            });
+
+            socket.on('keepalive', () => {
+                console.log("Keepalive from " + userid);
+                UD(userid).lasttime = (new Date).getTime();
+            });
+
+
+            socket.on('disconnect', () => {
+                console.log("Client disconnected " + userid);
+            });
 
     });
