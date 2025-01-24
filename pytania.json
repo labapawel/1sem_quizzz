@@ -1,0 +1,11 @@
+{
+    "czas": 60,
+    "pytania":[
+        {
+            "pytanie": "Czy jesteś zadowolony z naszej obsługi?",
+            "odpowiedzi": ["Tak", "Nie","Nie mam zdania", "Nie wiem"],
+            "poprawna": "Tak",
+            "czas": 30
+        }
+    ]
+}
