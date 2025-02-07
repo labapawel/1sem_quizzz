@@ -56,7 +56,7 @@ ss.on('connection', (socket) =>
 
 
             socket.on('disconnect', () => {
-                console.log("Client disconnected " + userid);
+                console.log("Rozlączenie klienta " + userid);
             });
 
     });
