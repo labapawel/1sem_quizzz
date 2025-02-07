@@ -1,5 +1,6 @@
 console.log(document.cookie);
 const $ = (el) => document.querySelector(el);
+const $$ = (el) => document.querySelectorAll(el);
 
 
 if(!document.cookie.includes('userid')){
@@ -34,7 +35,45 @@ const sock = io('wss://',{
 
 sock.on('connect', () => {
     console.log(`Jesteś połączony z hostem, moje id: ${sock.id}`);
+
+    
 });
+
+$('.status button').addEventListener('click', (e)=>{
+    sock.emit('start');
+});
+
+
+sock.on('status', (gamestatus) => {
+
+    console.log(gamestatus);
+    
+    if(gamestatus.started){
+        $('.status').classList.add('hide');
+        $('.pytanie').classList.remove('hide');
+
+        $('.pytanie').innerText = gamestatus.answer.pytanie;
+        let odpowiedzi = $$('.answer-grid .answer-button');
+        odpowiedzi.forEach((el, i) => {
+            console.log(el);
+            
+            el.querySelector('span').innerText = gamestatus.answer.odpowiedzi[i];
+        });
+    }
+    else    {
+        $('.status').classList.remove('hide');
+        $('.pytanie').classList.add('hide');
+    }
+
+    $('#clients').innerText = gamestatus.clientcount;
+});
+
+sock.on("ok", (ud)=>{
+  
+    console.log(ud.name);
+    window.location.href = 'client.html';
+    
+})
 
 setInterval(() => {
     // wysłanie keepalive co 20 sekund

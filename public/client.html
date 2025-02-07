@@ -6,31 +6,39 @@
     <title>Kahoot Game</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="client.css">
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 </head>
 <body>
+
     <div class="question-area">
+        <div class="timer client" id="clients">0</div>
         <div class="timer" id="timer">30</div>
-        Pytanie lub miejsce na zdjęcie
+        <div class="status hide">
+            <button class="start">Start</button>
+        </div>
+        <div class="pytanie hide">
+            Pytanie lub miejsce na zdjęcie
+        </div>
     </div>
     <div class="answer-grid">
         <button class="answer-button red">
             <i class="fas fa-star"></i>
-            Odpowiedź 1
+            <span>Odpowiedź 1</span>
         </button>
         <button class="answer-button blue">
             <i class="fas fa-square"></i>
-            Odpowiedź 2
+            <span>Odpowiedź 2</span>
         </button>
         <button class="answer-button green">
             <i class="fas fa-play"></i>
-            Odpowiedź 3
+            <span>Odpowiedź 3</span>
         </button>
         <button class="answer-button yellow">
             <i class="fas fa-circle"></i>
-            Odpowiedź 4
+            <span>Odpowiedź 4</span>
         </button>
     </div>
 
-    <script src="skrypt.js"></script>
+    <script src="skrypt.js" defer></script>
 </body>
 </html>

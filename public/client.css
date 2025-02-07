@@ -6,6 +6,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden;
 }
 .question-area {
     position: relative;
@@ -34,6 +35,28 @@ body {
     font-size: 2rem;
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button.start { display: none;}
+
+@media(min-width: 1000px) {
+    button.start {
+        width: 200px;
+        display: block;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+}
+
+.hide {
+    display: none;
+}
+
+.timer.client {
+    right: auto;
+    background-color: hsl(133, 100%, 71%);
+    left: 20px;
 }
 .answer-grid {
     display: grid;
