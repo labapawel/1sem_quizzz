@@ -76,7 +76,7 @@ button.start { display: none;}
     gap: 10px;
     transition: transform 0.2s;
 }
-.answer-button:hover {
+.answer-button:hover, .selected {
     transform: scale(1.05);
 }
 .answer-button i {

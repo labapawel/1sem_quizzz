@@ -2,6 +2,10 @@ const express = require('express'); // serwer http na express
 const https = require('https'); // serwer https
 const fs = require('fs'); // operacja na plikach
 const io = require('socket.io'); // serwer socket.io
+require('dotenv').config(); // wczytanie pliku .env
+const {generateStory} = require('./gemini'); // importowanie pliku gemini.js
+const { log } = require('console');
+
 
 
 const app = express(); // serwer http
@@ -30,16 +34,30 @@ let pytania = [
     {'pytanie':'Jak zadeklarować zmienną globalną w PHP', 'odpowiedzi':['global zmienna = 22;','let zmienna = 22;','var zmienna = 22;','const zmienna = 22;'], 'poprawna':2},
 ]
 
+let odp = [];
+
+
 let gamestatus = {
     'started':false,
     'current':0,
     'time':0,
     'maxtime':30,
+    'odp':0,
     'clientcount':0,
     'answer':{pytanie:"", odpowiedzi: [], poprawna:-1},
     'results':[]
 };
 
+
+app.get('/test', async(req, res) => {
+
+    let prompt = 'Napisz pytania do Kahoot';
+    let story = await generateStory(process.env.GEMINI_API_TOKEN, prompt, 'Będziesz specjalistą w dziedzinie it,\n będziesz generatora pod Kahoot, odpowiadaj w formie json, {pytanie, odpowiedzi[], poprawnaodp},\n nie dodawaj dodatkwych informacji, komentarzy, opisów i znaczników');
+
+    res.send(story);
+
+
+});
 
 server.listen(443, () => { 
     console.log("Server started on https://localhost:443");
@@ -52,6 +70,16 @@ let baza  = []; // baza danych
 const UD = (userid) =>{
     return baza.filter((el) => el.userid == userid)[0];
 }
+
+
+setInterval(() => {
+    if(gamestatus.started && (new Date).getTime() < gamestatus.endTime){
+        gamestatus.time = (new Date()).getTime();
+        gamestatus.odp = odp.length;
+        ss.emit('status', gamestatus);
+    }
+} , 1000);
+
 
 ss.on('connection', (socket) => 
     { // połączenie z klientem
@@ -75,19 +103,28 @@ ss.on('connection', (socket) =>
 
             socket.on('dolacz', (name) => {
                // let ud = UD(userid);
-                console.log(ud);
+                console.log("dolacz:", ud);
+
+                /**
+                 * undefined false 0 "" null NaN => false
+                 */
                 
-                if(ud.name == ""){
-                console.log("Dolaczono " + name);
-                ud.name = name;
+                if(ud && !ud.name){
+                    console.log("Dolaczono " + name);
+                    ud.name = name;
+                } 
+
                 socket.emit('ok', ud);
-                }
             });
 
             socket.on('start', () => {
+                odp = [];
+                gamestatus.startTime = (new Date).getTime();
+                gamestatus.endTime = gamestatus.startTime + gamestatus.maxtime*1000;
                 gamestatus.started = true;
                 gamestatus.current = 0;
-                gamestatus.time = new Date().getTime();
+                gamestatus.odp = 0;
+                gamestatus.time = (new Date()).getTime();
                 gamestatus.answer = pytania[gamestatus.current];
                 gamestatus.results = [];
                 ss.emit('status', gamestatus);
@@ -99,6 +136,16 @@ ss.on('connection', (socket) =>
                 ud.lasttime = (new Date).getTime();
             });
 
+
+            socket.on('odpowiedz', (userodp) => {
+
+                let odpopwiedzUser = odp.filter(e=>e.userid == ud.userid)[0];
+                if(!odpopwiedzUser)
+                        odp.push({userid:ud.userid,odp:userodp});
+
+                console.log(ud,odp);
+                
+            });
 
             socket.on('disconnect', () => {
                 console.log("Rozlączenie klienta " + userid);

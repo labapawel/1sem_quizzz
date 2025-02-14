@@ -3,6 +3,7 @@ const $ = (el) => document.querySelector(el);
 const $$ = (el) => document.querySelectorAll(el);
 
 
+
 if(!document.cookie.includes('userid')){
         let cookie = Math.floor(new Date().getTime()*Math.random()*500);
         document.cookie = `userid=${cookie}`;
@@ -33,18 +34,38 @@ const sock = io('wss://',{
     connect_timeout: 5000,
 });
 
+let abutt = $$('.answer-button');
+if(abutt.length == 4)
+    
+abutt.forEach((el, index) => el.addEventListener('click', (e) => {
+    let target = e.target;
+    if(!e.target.className.includes('answer-button'))
+        target = e.target.parentElement;
+    abutt.forEach((el) => el.classList.remove('selected'));
+    target.classList.add('selected');
+    sock.emit('odpowiedz', index);
+}));
+
+
 sock.on('connect', () => {
     console.log(`Jesteś połączony z hostem, moje id: ${sock.id}`);
 
     
 });
 
-$('.status button').addEventListener('click', (e)=>{
+let btn_start = $('.status button');
+
+if(btn_start)
+    btn_start.addEventListener('click', (e)=>{
     sock.emit('start');
 });
 
 
 sock.on('status', (gamestatus) => {
+
+    //console.log(window.location.href.indexOf('client.html'));
+    
+    if(window.location.href.toString().indexOf('client.html') == -1) return;
 
     console.log(gamestatus);
     
@@ -53,6 +74,8 @@ sock.on('status', (gamestatus) => {
         $('.pytanie').classList.remove('hide');
 
         $('.pytanie').innerText = gamestatus.answer.pytanie;
+        $("#timer").innerText = Math.floor((gamestatus.endTime - gamestatus.time)/1000);
+
         let odpowiedzi = $$('.answer-grid .answer-button');
         odpowiedzi.forEach((el, i) => {
             console.log(el);
@@ -65,12 +88,13 @@ sock.on('status', (gamestatus) => {
         $('.pytanie').classList.add('hide');
     }
 
-    $('#clients').innerText = gamestatus.clientcount;
+    $('#clients').innerText = gamestatus.odp ;
+    ostatni_status = gamestatus.started;
 });
 
 sock.on("ok", (ud)=>{
   
-    console.log(ud.name);
+    console.log('OK:', ud.name);
     window.location.href = 'client.html';
     
 })

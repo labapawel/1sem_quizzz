@@ -1,0 +1,52 @@
+[
+    {
+        "pytanie": "Który z obiektów NIE jest planetą Układu Słonecznego?",
+        "odpowiedzi": [
+            "Mars",
+            "Wenus",
+            "Europa",
+            "Jowisz"
+        ],
+        "poprawnaodp": "Europa"
+    },
+    {
+        "pytanie": "Co to jest 'big data'?",
+        "odpowiedzi": [
+            "Ogromne ilości danych",
+            "Małe ilości danych",
+            "Dane bez wartości",
+            "Dane o kosmosie"
+        ],
+        "poprawnaodp": "Ogromne ilości danych"
+    },
+    {
+        "pytanie": "Który język programowania jest często używany w analizie danych?",
+        "odpowiedzi": [
+            "Java",
+            "C++",
+            "Python",
+            "HTML"
+        ],
+        "poprawnaodp": "Python"
+    },
+    {
+        "pytanie": "Co to jest algorytm?",
+        "odpowiedzi": [
+            "Przepis na ciasto",
+            "Krok po kroku instrukcja rozwiązania problemu",
+            "Nazwa planety",
+            "Rodzaj komputera"
+        ],
+        "poprawnaodp": "Krok po kroku instrukcja rozwiązania problemu"
+    },
+    {
+        "pytanie": "Co to jest chmura obliczeniowa (cloud computing)?",
+        "odpowiedzi": [
+            "Rodzaj deszczu",
+            "Usługa dostarczania zasobów IT przez internet",
+            "Nazwa firmy technologicznej",
+            "Rodzaj gry komputerowej"
+        ],
+        "poprawnaodp": "Usługa dostarczania zasobów IT przez internet"
+    }
+]
